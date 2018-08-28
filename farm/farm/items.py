@@ -10,6 +10,7 @@ import scrapy
 
 class FarmItem(scrapy.Item):
     # define the fields for your item here like:
+    #定义结构化数据信息
     # name = scrapy.Field()
     #省份
     province = scrapy.Field()
