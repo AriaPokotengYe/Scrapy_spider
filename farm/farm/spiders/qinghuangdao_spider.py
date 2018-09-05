@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 import scrapy
 import time
 from farm.items import FarmItem
@@ -7,7 +7,7 @@ class QinghuangdaoSpiderSpider(scrapy.Spider):
     now = time.strftime('%Y-%m-%d', time.localtime())
     name = 'qinghuangdao_spider'
     allowed_domains = ['www.vipveg.com']
-    start_urls = ['http://www.vipveg.com/market/237.html']
+    start_urls = ['http://www.vipveg.com/market/227.html']
 
     def parse(self, response):
         item_list = response.xpath("//td[@class='borderTop p_3_4 l_h_21']/table/tr")
@@ -37,13 +37,13 @@ class QinghuangdaoSpiderSpider(scrapy.Spider):
         print("------价格页面解析函数------")
         item_list = response.xpath("//table[@class='f_s_14']/tr")
         for i_item in item_list:
-            farm_item = FarmItem()
-            farm_item['province'] = "甘肃"
-            farm_item['market'] = "甘肃酒泉春光农产品市场有限责任公司"
+            farm_item = FarmItem() #Farmitem实例化对象
+            farm_item['province'] = "黑龙江"
+            farm_item['market'] = "牡丹江地利农副产品有限公司"
             farm_item['typy'] = "蔬菜"
             farm_item['name'] = i_item.xpath("./td[5]/a/text()").extract_first()[11:-4]
             farm_item['standard'] = "none"
-            farm_item['area'] = "西北"
+            farm_item['area'] = "东北"
             farm_item['color'] = "none"
             farm_item['unit'] = "元/斤"
             farm_item['minPrice'] = i_item.xpath("./td[2]/text()").extract_first()[1:]
