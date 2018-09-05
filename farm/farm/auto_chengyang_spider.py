@@ -10,10 +10,10 @@ class AutoChengyangSpiderSpider(scrapy.Spider):
     name = 'auto_chengyang_spider'
     allowed_domains = ['www.cncyms.cn']
     #最大爬取页数，必须大于等于2
-    max_crawl_num = 5
+    max_crawl_num = 20
     # 爬虫开始时间的时间戳
     today = time.time()
-    # 爬取从当前时间开始往前20天内的数据
+    # 爬取从当前时间开始往前2天内的数据
     crawl_day = 2 * 24 * 60 * 60
 
     shucai_current_num = 1
@@ -64,7 +64,9 @@ class AutoChengyangSpiderSpider(scrapy.Spider):
             farm_item['maxPrice'] = json_response["list"][num]["MPrice"]
             farm_item['entertime'] = now
             farm_item['time'] = json_response["list"][num]["ReleaseTime"]
-            yield farm_item
+            if time.mktime(time.strptime(farm_item['time'], "%Y-%m-%d")) > self.today - self.crawl_day:
+                yield farm_item
+            # yield farm_item
         self.shucai_current_num += 1
         if self.shucai_current_num != self.max_crawl_num:
             yield scrapy.FormRequest(
@@ -153,10 +155,10 @@ class AutoChengyangSpiderSpider(scrapy.Spider):
             if time.mktime(time.strptime(farm_item['time'], "%Y-%m-%d")) > self.today - self.crawl_day:
                 yield farm_item
             # yield farm_item
-        self.fushipin_num += 1
-        if self.fushipin_num != self.max_crawl_num:
+        self.fushipin_current_num += 1
+        if self.fushipin_current_num != self.max_crawl_num:
             yield scrapy.FormRequest(
                 url='http://www.cncyms.cn/pages.php',
-                formdata={"pageNum": str(self.fushipin_num), "pname": "", "reltime": "副食品"},
+                formdata={"pageNum": str(self.fushipin_current_num), "pname": "", "reltime": "副食品"},
                 callback=self.fushipin_parse
             )
