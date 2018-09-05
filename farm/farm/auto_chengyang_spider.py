@@ -9,8 +9,13 @@ from farm.items import FarmItem
 class AutoChengyangSpiderSpider(scrapy.Spider):
     name = 'auto_chengyang_spider'
     allowed_domains = ['www.cncyms.cn']
-    #最大爬取数量，必须大于等于2
+    #最大爬取页数，必须大于等于2
     max_crawl_num = 5
+    # 爬虫开始时间的时间戳
+    today = time.time()
+    # 爬取从当前时间开始往前20天内的数据
+    crawl_day = 2 * 24 * 60 * 60
+
     shucai_current_num = 1
     shuichanpin_current_num = 1
     guopin_current_num = 1
@@ -86,7 +91,9 @@ class AutoChengyangSpiderSpider(scrapy.Spider):
             farm_item['maxPrice'] = json_response["list"][num]["MPrice"]
             farm_item['entertime'] = now
             farm_item['time'] = json_response["list"][num]["ReleaseTime"]
-            yield farm_item
+            if time.mktime(time.strptime(farm_item['time'], "%Y-%m-%d")) > self.today - self.crawl_day:
+                yield farm_item
+            # yield farm_item
         self.shuichanpin_current_num += 1
         if self.shuichanpin_current_num != self.max_crawl_num:
             yield scrapy.FormRequest(
@@ -113,7 +120,9 @@ class AutoChengyangSpiderSpider(scrapy.Spider):
             farm_item['maxPrice'] = json_response["list"][num]["MPrice"]
             farm_item['entertime'] = now
             farm_item['time'] = json_response["list"][num]["ReleaseTime"]
-            yield farm_item
+            if time.mktime(time.strptime(farm_item['time'], "%Y-%m-%d")) > self.today - self.crawl_day:
+                yield farm_item
+            # yield farm_item
         self.guopin_current_num += 1
         if self.guopin_current_num != self.max_crawl_num:
             yield scrapy.FormRequest(
@@ -140,7 +149,10 @@ class AutoChengyangSpiderSpider(scrapy.Spider):
             farm_item['maxPrice'] = json_response["list"][num]["MPrice"]
             farm_item['entertime'] = now
             farm_item['time'] = json_response["list"][num]["ReleaseTime"]
-            yield farm_item
+            # 如果在爬取相应的时间范围内，则加入item
+            if time.mktime(time.strptime(farm_item['time'], "%Y-%m-%d")) > self.today - self.crawl_day:
+                yield farm_item
+            # yield farm_item
         self.fushipin_num += 1
         if self.fushipin_num != self.max_crawl_num:
             yield scrapy.FormRequest(

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import time
-import datetime
 from farm.items import FarmItem
 #运行命令: scrapy crawl auto_vipveg_spider -o ./data/vipveg.csv
 #本爬虫自动爬取所有省份所有市场所有品种的第一页价格页面
@@ -12,8 +11,8 @@ class AutoVipvegSpiderSpider(scrapy.Spider):
     now = time.strftime('%Y-%m-%d', time.localtime())
     #爬虫开始时间的时间戳
     today = time.time()
-    #爬取从当前时间开始往前20天内的数据
-    crawl_day = 20*24*60*60
+    #爬取从当前时间开始往前2天内的数据
+    crawl_day = 2*24*60*60
     name = 'auto_vipveg_spider'
     allowed_domains = ['www.vipveg.com']
     start_urls = ['http://www.vipveg.com/market/cta-1.html']
